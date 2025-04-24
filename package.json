@@ -1,21 +1,35 @@
 {
   "name": "@misiki/litekart-connector",
-  "version": "2.0.0",
+  "version": "2.0.5",
   "description": "API Connector for Litekart",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./services": {
+      "types": "./dist/services/index.d.ts",
+      "import": "./dist/services/index.js",
+      "require": "./dist/services/index.cjs"
+    },
+    "./services/*": {
+      "types": "./dist/services/*.d.ts",
+      "import": "./dist/services/*.js",
+      "require": "./dist/services/*.cjs"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"No tests configured\"",
-    "p": "tsc --skipLibCheck && npm publish --access public",
-    "dev": "tsc --watch"
+    "build": "tsup",
+    "prepublishOnly": "npm run build",
+    "p": "tsup && npm publish --access public",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",
@@ -23,10 +37,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/node": "^22.13.1",
+    "tsup": "^8.4.0",
     "typescript": "^5.7.3"
   },
-  "files": [
-    "dist"
-  ],
   "packageManager": "bun@1.2.2"
 }

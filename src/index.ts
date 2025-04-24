@@ -1,3 +1,2 @@
-export const version: string = '2.0.0'
-export * from './services'
-export * from './types'
+export * from './services/index.js'
+export * from './types/index.js'
