@@ -4,12 +4,13 @@ import { MeilisearchService } from './meilisearch-service'
 
 export class SearchService extends BaseService {
   private static instance: SearchService
-  private meilisearchService: MeilisearchService
+  private meilisearchService: MeilisearchService =
+    MeilisearchService.getInstance()
+
   /**
    * Get the singleton instance
    */
   static getInstance(): SearchService {
-    this.meilisearchService = new MeilisearchService()
     if (!SearchService.instance) {
       SearchService.instance = new SearchService()
     }
@@ -84,7 +85,7 @@ export class SearchService extends BaseService {
         data: res?.hits || [],
         count: res?.totalHits || res?.estimatedTotalHits || 0,
         totalPages: res?.totalPages || 0,
-        categoryHierarchy: res?.categoryHierarchy || [],
+        categoryHierarchy: res?.categories || [],
         facets: {
           priceStat: {
             min: res?.allfacetStats?.price?.min,
@@ -108,17 +109,7 @@ export class SearchService extends BaseService {
     } catch (error) {
       console.error(error)
       // Return a valid empty result object that matches the expected type
-      return {
-        data: [],
-        count: 0,
-        totalPages: 0,
-        facets: {
-          priceStat: { min: undefined, max: undefined },
-          categories: [],
-          tags: [],
-          allFilters: {}
-        }
-      }
+      return this.emptyResult()
     }
   }
 
@@ -138,6 +129,7 @@ export class SearchService extends BaseService {
         data: res?.hits || [],
         count: res?.totalHits || res?.estimatedTotalHits || 0,
         totalPages: res?.totalPages || 0,
+        categoryHierarchy: res?.categories || [],
         facets: {
           priceStat: {
             min: res?.allfacetStats?.price?.min,
@@ -161,17 +153,7 @@ export class SearchService extends BaseService {
     } catch (error) {
       console.error(error)
       // Return a valid empty result object
-      return {
-        data: [],
-        count: 0,
-        totalPages: 0,
-        facets: {
-          priceStat: { min: undefined, max: undefined },
-          categories: [],
-          tags: [],
-          allFilters: {}
-        }
-      }
+      return this.emptyResult()
     }
   }
 
@@ -185,6 +167,7 @@ export class SearchService extends BaseService {
       data: [],
       count: 0,
       totalPages: 0,
+      categoryHierarchy: [],
       facets: {
         priceStat: { min: undefined, max: undefined },
         categories: [],

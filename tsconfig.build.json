@@ -5,6 +5,9 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "strictFunctionTypes": false
   }
 }
