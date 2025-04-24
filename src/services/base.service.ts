@@ -66,7 +66,7 @@ export class BaseService {
 	 */
 	async patch<T>(url: string, data: any): Promise<T> {
 		const response = await this._fetch(url, {
-			method: 'PUT',
+			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
