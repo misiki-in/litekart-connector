@@ -4,9 +4,13 @@ import { MeilisearchService } from './meilisearch-service'
 
 export class SearchService extends BaseService {
   private static instance: SearchService
-  private meilisearchService: MeilisearchService =
-    MeilisearchService.getInstance()
+  private meilisearchService: MeilisearchService 
 
+	constructor(fetchFn?: typeof fetch) {
+    super(fetchFn)
+		// Use provided fetch or global fetch as fallback
+		this.meilisearchService = new MeilisearchService(fetchFn)
+	}
   /**
    * Get the singleton instance
    */
