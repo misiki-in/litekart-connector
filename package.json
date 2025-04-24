@@ -1,6 +1,6 @@
 {
   "name": "@misiki/litekart-connector",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "API Connector for Litekart",
   "type": "module",
   "main": "./dist/index.cjs",
