@@ -82,6 +82,8 @@ export class BaseService {
 		const response = await this._fetch(url, {
 			method: 'DELETE'
 		})
+    if (response.status === 204)
+      return response as T
 		return (await response.json()) as T
 	}
 }
