@@ -1,5 +1,5 @@
 import type { AxiosRequestConfig } from 'axios'
-import { axiosInstance } from '../services/axios'
+import { axiosInstance } from './axios'
 
 export class ApiService {
 	private handleError(error: any) {
