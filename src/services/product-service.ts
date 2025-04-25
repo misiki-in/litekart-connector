@@ -42,7 +42,7 @@ export class ProductService extends BaseService {
   async listFeaturedProducts({ page = 1, sort = '-createdAt' }) {
     const search = '' // "Featured"
     return this.get(
-      `/api/products?page=${page}&search=${search}&sort=${sort}`
+      `/api/products/featured?page=${page}&search=${search}&sort=${sort}`
     ) as Promise<PaginatedResponse<[Product]>>
   }
 
