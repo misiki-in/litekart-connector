@@ -3,11 +3,22 @@ const REGION_ID = ''
 
 import { BaseService } from './base.service'
 
+/**
+ * CartService provides functionality for managing shopping carts
+ * in the Litekart platform.
+ *
+ * This service helps with:
+ * - Retrieving cart data and contents
+ * - Adding, updating, and removing items from the cart
+ * - Managing cart operations such as checkout preparation
+ */
 export class CartService extends BaseService {
   private static instance: CartService
 
   /**
    * Get the singleton instance
+   *
+   * @returns {CartService} The singleton instance of CartService
    */
   static getInstance(): CartService {
     if (!CartService.instance) {
@@ -15,23 +26,72 @@ export class CartService extends BaseService {
     }
     return CartService.instance
   }
+
+  /**
+   * Fetches the current user's cart data
+   *
+   * @returns {Promise<Cart>} The cart data
+   * @api {get} /api/cart Get current cart
+   *
+   * @example
+   * // Fetch current cart data
+   * const cart = await cartService.fetchCartData();
+   */
   async fetchCartData() {
     return this.get('/api/cart') as Promise<Cart>
   }
 
+  /**
+   * Refreshes the cart data from the server
+   *
+   * @returns {Promise<Cart>} The refreshed cart data
+   * @api {get} /api/carts/refresh/:cartId Refresh cart
+   *
+   * @example
+   * // Refresh the current cart
+   * const refreshedCart = await cartService.refereshCart();
+   */
   async refereshCart() {
     const cartId = localStorage.getItem('cart_id') || null
     return this.get(`/api/carts/refresh/${cartId}`) as Promise<Cart>
   }
 
-  //  async fetchRefreshCart(cartId: string) {
-  // 	return this.get<Cart>(`/api/carts/${cartId}`)
-  // }
-
+  /**
+   * Fetches a cart by its ID
+   *
+   * @param {string} cartId - The ID of the cart to fetch
+   * @returns {Promise<Cart>} The requested cart
+   * @api {get} /api/carts/:id Get cart by ID
+   *
+   * @example
+   * // Get a specific cart by ID
+   * const cart = await cartService.getCartByCartId('123');
+   */
   async getCartByCartId(cartId: string) {
     return this.get(`/api/carts/${cartId}`) as Promise<Cart>
   }
 
+  /**
+   * Adds a product to the cart or updates its quantity
+   *
+   * @param {object} params - The product details to add to cart
+   * @param {string} params.productId - The ID of the product to add
+   * @param {string} params.variantId - The variant ID of the product
+   * @param {number} params.qty - The quantity to add (or -9999999 to remove)
+   * @param {string|null} [params.cartId] - Optional cart ID, will use from localStorage if not provided
+   * @param {string|null} params.lineId - Line item ID if updating an existing item
+   * @returns {Promise<Cart>} The updated cart
+   * @api {post} /api/carts/:cartId/line-items Add item to cart
+   *
+   * @example
+   * // Add a product to cart
+   * const updatedCart = await cartService.addToCart({
+   *   productId: '123',
+   *   variantId: '456',
+   *   qty: 1,
+   *   lineId: null
+   * });
+   */
   async addToCart({
     productId,
     variantId,

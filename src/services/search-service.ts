@@ -2,17 +2,29 @@ import { ProductSearchResult } from '../types/product-search'
 import { BaseService } from './base.service'
 import { MeilisearchService } from './meilisearch-service'
 
+/**
+ * SearchService provides a high-level API for product search operations
+ * by leveraging the underlying Meilisearch implementation.
+ *
+ * This service helps with:
+ * - Converting URL search parameters into Meilisearch queries
+ * - Processing and formatting search results into a consistent format
+ * - Handling search-related errors with fallback values
+ */
 export class SearchService extends BaseService {
   private static instance: SearchService
-  private meilisearchService: MeilisearchService 
+  private meilisearchService: MeilisearchService
 
-	constructor(fetchFn?: typeof fetch) {
+  constructor(fetchFn?: typeof fetch) {
     super(fetchFn)
-		// Use provided fetch or global fetch as fallback
-		this.meilisearchService = new MeilisearchService(fetchFn)
-	}
+    // Use provided fetch or global fetch as fallback
+    this.meilisearchService = new MeilisearchService(fetchFn)
+  }
+
   /**
    * Get the singleton instance
+   *
+   * @returns {SearchService} The singleton instance of SearchService
    */
   static getInstance(): SearchService {
     if (!SearchService.instance) {
@@ -21,6 +33,22 @@ export class SearchService extends BaseService {
     return SearchService.instance
   }
 
+  /**
+   * Performs a product search using URL search parameters
+   *
+   * This method parses URL search parameters and organizes them into different types
+   * (standard, attribute-based, option-based, etc.) before executing the search.
+   *
+   * @param {URL} url - The URL containing search parameters in its query string
+   * @param {string} [slug] - Optional category slug that overrides the one in URL params
+   * @returns {Promise<ProductSearchResult>} Structured search results with products and facets
+   * @api {get} /api/ms/products Search products using URL parameters
+   *
+   * @example
+   * // Search using a URL with multiple parameters
+   * const searchUrl = new URL('https://example.com/search?search=shoes&categories=footwear&priceFrom=50&priceTo=200');
+   * const results = await searchService.searchWithUrl(searchUrl);
+   */
   async searchWithUrl(url: URL, slug?: string): Promise<ProductSearchResult> {
     try {
       const searchParams = new URLSearchParams(url.search)
@@ -120,8 +148,16 @@ export class SearchService extends BaseService {
   /**
    * Search through Meilisearch with a simple query string
    *
-   * @param query - The search query string
-   * @returns A structured ProductSearchResult object
+   * This method is useful for basic search scenarios like autocomplete, search bars,
+   * and quick lookups where only a text query is needed.
+   *
+   * @param {string} query - The search query string
+   * @returns {Promise<ProductSearchResult>} Structured search results with products and facets
+   * @api {get} /api/ms/products?search={query} Search products with query string
+   *
+   * @example
+   * // Simple search for "red shoes"
+   * const results = await searchService.searchWithQuery("red shoes");
    */
   async searchWithQuery(query: string): Promise<ProductSearchResult> {
     try {
@@ -164,7 +200,10 @@ export class SearchService extends BaseService {
   /**
    * Create an empty product search result
    *
-   * @returns An empty ProductSearchResult object with default values
+   * This method is used internally for error handling and as a fallback
+   * when search operations fail.
+   *
+   * @returns {ProductSearchResult} Empty result object with default values
    */
   emptyResult(): ProductSearchResult {
     return {

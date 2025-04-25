@@ -2,23 +2,66 @@ import type { PaginatedResponse, Order } from './../types'
 
 import { BaseService } from './base.service'
 
+/**
+ * OrderService provides functionality for working with specific resources
+ * in the Litekart API.
+ *
+ * This service helps with:
+ * - Main functionality point 1
+ * - Main functionality point 2
+ * - Main functionality point 3
+ */
 export class OrderService extends BaseService {
   private static instance: OrderService
 
   /**
    * Get the singleton instance
    */
+  /**
+ * Get the singleton instance
+ * 
+ * @returns {OrderService} The singleton instance of OrderService
+ */
   static getInstance(): OrderService {
     if (!OrderService.instance) {
       OrderService.instance = new OrderService()
     }
     return OrderService.instance
   }
+  /**
+ * Fetches Order from the API
+ * 
+ * @param {Object} options - The request options
+ * @param {number} [options.page=1] - The page number for pagination
+ * @param {string} [options.q=''] - Search query string
+ * @param {string} [options.sort='-createdAt'] - Sort order
+ * @returns {Promise<any>} The requested data
+ * @api {get} /api/order Get order
+ * 
+ * @example
+ * // Example usage
+ * const result = await orderService.list({ page: 1 });
+ */
   async list({ page = 1, q = '', sort = '-createdAt' }) {
     return this.get(`/api/orders?page=${page}&q=${q}&sort=${sort}`) as Promise<
       PaginatedResponse<Order>
     >
   }
+
+  /**
+ * Fetches Order from the API
+ * 
+ * @param {Object} options - The request options
+ * @param {number} [options.page=1] - The page number for pagination
+ * @param {string} [options.q=''] - Search query string
+ * @param {string} [options.sort='-createdAt'] - Sort order
+ * @returns {Promise<any>} The requested data
+ * @api {get} /api/order Get order
+ * 
+ * @example
+ * // Example usage
+ * const result = await orderService.listOrdersByParent({ page: 1 });
+ */
 
   async listOrdersByParent({
     orderNo,
@@ -32,13 +75,49 @@ export class OrderService extends BaseService {
     ) as Promise<PaginatedResponse<Order>>
   }
 
+  /**
+ * Fetches a single Order by ID
+ * 
+ * @param {string} id - The ID of the order to fetch
+ * @returns {Promise<any>} The requested order
+ * @api {get} /api/order/:id Get order by ID
+ * 
+ * @example
+ * // Example usage
+ * const order = await orderService.fetchOrder('123');
+ */
+
   async fetchOrder(id: string) {
     return this.get(`/api/orders/${id}`) as Promise<Order>
   }
 
+  /**
+ * Fetches a single Order by ID
+ * 
+ * @param {string} id - The ID of the order to fetch
+ * @returns {Promise<any>} The requested order
+ * @api {get} /api/order/:id Get order by ID
+ * 
+ * @example
+ * // Example usage
+ * const order = await orderService.getOrder('123');
+ */
+
   async getOrder(orderNo: string) {
     return this.get(`/api/orders/${orderNo}`) as Promise<Order>
   }
+
+  /**
+ * Fetches a single Order by ID
+ * 
+ * @param {string} id - The ID of the order to fetch
+ * @returns {Promise<any>} The requested order
+ * @api {get} /api/order/:id Get order by ID
+ * 
+ * @example
+ * // Example usage
+ * const order = await orderService.fetchTrackOrder('123');
+ */
 
   async fetchTrackOrder(id: string) {
     return this.get(`/api/orders/list-by-parent?id=${id}`) as Promise<
@@ -89,11 +168,38 @@ export class OrderService extends BaseService {
     return this.get('/api/orders/me') as Promise<Order>
   }
 
+  /**
+ * Fetches Order from the API
+ * 
+ * @param {Object} options - The request options
+ * @param {number} [options.page=1] - The page number for pagination
+ * @param {string} [options.q=''] - Search query string
+ * @param {string} [options.sort='-createdAt'] - Sort order
+ * @returns {Promise<any>} The requested data
+ * @api {get} /api/order Get order
+ * 
+ * @example
+ * // Example usage
+ * const result = await orderService.listPublic({ page: 1 });
+ */
+
   async listPublic() {
     return this.get('/api/orders/public/list') as Promise<
       PaginatedResponse<Order>
     >
   }
+
+  /**
+ * Fetches a single Order by ID
+ * 
+ * @param {string} id - The ID of the order to fetch
+ * @returns {Promise<any>} The requested order
+ * @api {get} /api/order/:id Get order by ID
+ * 
+ * @example
+ * // Example usage
+ * const order = await orderService.getOrderByEmailAndOTP('123');
+ */
 
   async getOrderByEmailAndOTP({ email, otp }: { email: string; otp: string }) {
     return this.get(
