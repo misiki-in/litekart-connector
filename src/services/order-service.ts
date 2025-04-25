@@ -80,7 +80,7 @@ export class OrderService extends BaseService {
  * 
  * @param {string} id - The ID of the order to fetch
  * @returns {Promise<any>} The requested order
- * @api {get} /api/order/:id Get order by ID
+ * @api {get} /api/orders/:id Get order by ID
  * 
  * @example
  * // Example usage
@@ -96,7 +96,7 @@ export class OrderService extends BaseService {
  * 
  * @param {string} id - The ID of the order to fetch
  * @returns {Promise<any>} The requested order
- * @api {get} /api/order/:id Get order by ID
+ * @api {get} /api/orders/:id Get order by ID
  * 
  * @example
  * // Example usage
@@ -112,7 +112,7 @@ export class OrderService extends BaseService {
  * 
  * @param {string} id - The ID of the order to fetch
  * @returns {Promise<any>} The requested order
- * @api {get} /api/order/:id Get order by ID
+ * @api {get} /api/orders/:id Get order by ID
  * 
  * @example
  * // Example usage
@@ -194,7 +194,7 @@ export class OrderService extends BaseService {
  * 
  * @param {string} id - The ID of the order to fetch
  * @returns {Promise<any>} The requested order
- * @api {get} /api/order/:id Get order by ID
+ * @api {get} /api/orders/:id Get order by ID
  * 
  * @example
  * // Example usage

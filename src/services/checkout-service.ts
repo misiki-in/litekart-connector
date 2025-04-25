@@ -156,19 +156,54 @@ export class CheckoutService extends BaseService {
     return this.get(`/api/shipping-rates/${cartId}`) as Promise<Checkout>
   }
 
-  /**
-   * Creates a new Checkout
-   *
-   * @param {any} data - The data to create
-   * @returns {Promise<any>} The created checkout
-   * @api {post} /api/checkout Create checkout
-   *
-   * @example
-   * // Example usage
-   * const newCheckout = await checkoutService.createAffirmPayOrder({
-   *   // required fields
-   * });
-   */
+  async capturePhonepePayment({
+    phonepe_order_id,
+    phonepe_payment_id
+  }: {
+    phonepe_order_id: string
+    phonepe_payment_id: string
+  }) {
+    return this.post('/api/checkout/phonepe-capture', {
+      phonepe_order_id,
+      phonepe_payment_id
+    })
+  }
+  async checkoutPaypal({
+    cartId,
+    origin,
+    return_url
+  }: {
+    cartId: string
+    origin: string
+    return_url: string
+  }) {
+    return this.post('/api/checkout/paypal', {
+      cartId,
+      origin,
+      return_url
+    })
+  }
+  async checkoutStripe({ cartId, origin }: { cartId: string; origin: string }) {
+    return this.post('/api/checkout/stripe', { cartId, origin })
+  }
+  async checkoutStripeCapture({
+    order_no,
+    pg,
+    payment_session_id,
+    storeId
+  }: {
+    order_no: string
+    pg: string
+    payment_session_id: string
+    storeId: string
+  }) {
+    return this.post('/api/checkout/stripe-capture', {
+      order_no,
+      pg,
+      payment_session_id,
+      storeId
+    })
+  }
 
   async createAffirmPayOrder({
     cartId,
