@@ -40,6 +40,18 @@ export class BaseService {
     return this._fetch
   }
 
+  private async handleError(response: Response) {
+    if (response.headers.get("Content-Type") != "application/json")
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+
+		if (response.status === 401) {
+			throw { message: 'Session expired. Please login again' }
+		}
+
+    const data = await response.json()
+		throw { message: 'Something went wrong. Please try again', ...data }
+  }
+
   /**
    * Perform a GET request
    *
@@ -52,7 +64,7 @@ export class BaseService {
     const response = await this._fetch(url)
 
     if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      await this.handleError(response)
     }
 
     return (await response.json()) as T
@@ -77,7 +89,7 @@ export class BaseService {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      await this.handleError(response)
     }
 
     return (await response.json()) as T
@@ -102,7 +114,7 @@ export class BaseService {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      await this.handleError(response)
     }
 
     return (await response.json()) as T
@@ -127,7 +139,7 @@ export class BaseService {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      await this.handleError(response)
     }
 
     return (await response.json()) as T
@@ -147,7 +159,7 @@ export class BaseService {
     })
 
     if (!response.ok && response.status !== 204) {
-      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      await this.handleError(response)
     }
 
     if (response.status === 204) return response as T
