@@ -46,9 +46,15 @@ export class BaseService {
    * @param {string} url - The URL to request
    * @returns {Promise<T>} Promise resolving to the response data
    * @template T - The expected response data type
+   * @throws {Error} Throws an error if the request fails
    */
   async get<T>(url: string): Promise<T> {
     const response = await this._fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+    }
+
     return (await response.json()) as T
   }
 
@@ -59,6 +65,7 @@ export class BaseService {
    * @param {any} data - The data to send in the request body
    * @returns {Promise<T>} Promise resolving to the response data
    * @template T - The expected response data type
+   * @throws {Error} Throws an error if the request fails
    */
   async post<T>(url: string, data: any): Promise<T> {
     const response = await this._fetch(url, {
@@ -68,6 +75,11 @@ export class BaseService {
       },
       body: JSON.stringify(data)
     })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+    }
+
     return (await response.json()) as T
   }
 
@@ -78,6 +90,7 @@ export class BaseService {
    * @param {any} data - The data to send in the request body
    * @returns {Promise<T>} Promise resolving to the response data
    * @template T - The expected response data type
+   * @throws {Error} Throws an error if the request fails
    */
   async put<T>(url: string, data: any): Promise<T> {
     const response = await this._fetch(url, {
@@ -87,6 +100,11 @@ export class BaseService {
       },
       body: JSON.stringify(data)
     })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+    }
+
     return (await response.json()) as T
   }
 
@@ -97,6 +115,7 @@ export class BaseService {
    * @param {any} data - The data to send in the request body
    * @returns {Promise<T>} Promise resolving to the response data
    * @template T - The expected response data type
+   * @throws {Error} Throws an error if the request fails
    */
   async patch<T>(url: string, data: any): Promise<T> {
     const response = await this._fetch(url, {
@@ -106,6 +125,11 @@ export class BaseService {
       },
       body: JSON.stringify(data)
     })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+    }
+
     return (await response.json()) as T
   }
 
@@ -115,11 +139,17 @@ export class BaseService {
    * @param {string} url - The URL to request
    * @returns {Promise<T>} Promise resolving to the response data or status
    * @template T - The expected response data type
+   * @throws {Error} Throws an error if the request fails
    */
   async delete<T>(url: string): Promise<T> {
     const response = await this._fetch(url, {
       method: 'DELETE'
     })
+
+    if (!response.ok && response.status !== 204) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+    }
+
     if (response.status === 204) return response as T
     return (await response.json()) as T
   }
