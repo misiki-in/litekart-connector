@@ -1,4 +1,4 @@
-import type { User, verifyEmail } from '$lib/types'
+import type { User, verifyEmail } from '../types'
 import { ApiService } from './api-service'
 
 export class AuthService {
