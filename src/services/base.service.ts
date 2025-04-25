@@ -40,6 +40,17 @@ export class BaseService {
     return this._fetch
   }
 
+  private async safeFetch(url: URL | string, data?: any) {
+    try {
+      return await this._fetch(url, data)
+    } catch(e: any) {
+      if (navigator.onLine) {
+			  throw { message: 'Please check your internet connection and try again' }
+      }
+      throw { message: 'Unable to reach the server. Please try again in a moment' }
+    }
+  }
+
   private async handleError(response: Response) {
     if (response.headers.get("Content-Type") != "application/json")
       throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
@@ -61,7 +72,7 @@ export class BaseService {
    * @throws {Error} Throws an error if the request fails
    */
   async get<T>(url: string): Promise<T> {
-    const response = await this._fetch(url)
+    const response = await this.safeFetch(url)
 
     if (!response.ok) {
       await this.handleError(response)
@@ -80,7 +91,7 @@ export class BaseService {
    * @throws {Error} Throws an error if the request fails
    */
   async post<T>(url: string, data: any): Promise<T> {
-    const response = await this._fetch(url, {
+    const response = await this.safeFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -105,7 +116,7 @@ export class BaseService {
    * @throws {Error} Throws an error if the request fails
    */
   async put<T>(url: string, data: any): Promise<T> {
-    const response = await this._fetch(url, {
+    const response = await this.safeFetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -130,7 +141,7 @@ export class BaseService {
    * @throws {Error} Throws an error if the request fails
    */
   async patch<T>(url: string, data: any): Promise<T> {
-    const response = await this._fetch(url, {
+    const response = await this.safeFetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -154,7 +165,7 @@ export class BaseService {
    * @throws {Error} Throws an error if the request fails
    */
   async delete<T>(url: string): Promise<T> {
-    const response = await this._fetch(url, {
+    const response = await this.safeFetch(url, {
       method: 'DELETE'
     })
 
