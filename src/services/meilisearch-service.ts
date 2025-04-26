@@ -1,6 +1,6 @@
 import type { Init } from '../types'
-import { MsSearchParams } from '../types/product-search'
-import { MeilisearchResponse } from '../types/product-search'
+import { MsSearchParams } from '../types/product-search-types'
+import { MeilisearchResponse } from '../types/product-search-types'
 
 import { BaseService } from './base.service'
 

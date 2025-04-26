@@ -1,4 +1,4 @@
-import { ProductSearchResult } from '../types/product-search'
+import { ProductSearchResult } from '../types/product-search-types'
 import { BaseService } from './base.service'
 import { MeilisearchService } from './meilisearch-service'
 

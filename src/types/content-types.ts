@@ -65,19 +65,6 @@ export type Gallery = {
 	updatedAt: string // Timestamp of the last update to the gallery item
 }
 
-export type Menu = {
-	id: string
-	active: boolean
-	name: string | null
-	menuId: string | null
-	link: string | null
-	items: Record<string, unknown>[]
-	storeId: string
-	userId: string | null
-	createdAt: string
-	updatedAt: string
-}
-
 export type Reels = {
 	id: string
 	name: string
@@ -123,17 +110,4 @@ export type Plugins = {
 	active: boolean // Indicates if the plugin is active
 	createdAt: string // Timestamp for when the plugin was created
 	updatedAt: string // Timestamp for when the plugin was last updated
-}
-
-export type Template = {
-	id?: string
-	templateId: string
-	title: string
-	subject: string
-	html: string
-	description: string
-	type: string
-	variables?: string[]
-	createdAt?: string
-	updatedAt?: string
 }
