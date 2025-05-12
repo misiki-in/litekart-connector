@@ -212,6 +212,16 @@ export class OrderService extends BaseService {
       PaginatedResponse<Order>
     >
   }
+
+  async submitReview({ rating, review, productId, variantId, uploadedImages }: any) {
+		return this.post<any>(`/api/products/ratings-and-reviews`, {
+			rating,
+			review,
+			productId,
+			variantId,
+			uploadedImages
+		})
+	}
 }
 
 // Use singleton instance
