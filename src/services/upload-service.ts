@@ -1,30 +1,19 @@
+import { Upload } from '../types'
 import { BaseService} from './base.service'
 
-/**
- * EnquiryService provides functionality for working with specific resources
- * in the Litekart API.
- *
- * This service helps with:
- * - Main functionality point 1
- * - Main functionality point 2
- * - Main functionality point 3
- */
-export class EnquiryService extends BaseService {
-  private static instance: EnquiryService
+export class UploadService extends BaseService {
+  private static instance:UploadService 
 
-  /**
-   * Get the singleton instance
-   */
   /**
    * Get the singleton instance
    *
-   * @returns {EnquiryService} The singleton instance of EnquiryService
+   * @returns {UploadService} The singleton instance ofUploadService 
    */
-  static getInstance(): EnquiryService {
-    if (!EnquiryService.instance) {
-      EnquiryService.instance = new EnquiryService()
+  static getInstance(): UploadService {
+    if (!UploadService.instance) {
+      UploadService.instance = new UploadService()
     }
-    return EnquiryService.instance
+    return UploadService.instance
   }
    async uploadToS3({
     file,
@@ -87,4 +76,4 @@ export class EnquiryService extends BaseService {
 }
 
 // // Use singleton instance
-export const enquiryService = EnquiryService.getInstance()
+export const uploadService = UploadService.getInstance()
