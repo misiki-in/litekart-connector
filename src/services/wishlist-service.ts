@@ -1,4 +1,4 @@
-import type { Wishlist } from './../types'
+import type { PaginatedResponse, Wishlist } from './../types'
 
 import { BaseService } from './base.service'
 
@@ -33,7 +33,7 @@ export class WishlistService extends BaseService {
    * @param {string} [options.q=''] - Search query string
    * @param {string} [options.sort=''] - Sort order
    * @param {number} [options.page=1] - Page number for pagination
-   * @returns {Promise<Wishlist>} The user's wishlist
+   * @returns {Promise<PaginatedResponse<Wishlist>>} The user's wishlist
    * @api {get} /api/wishlists/me Get user's wishlist
    *
    * @example
@@ -41,7 +41,7 @@ export class WishlistService extends BaseService {
    * const wishlist = await wishlistService.fetchWishlist({ page: 1 });
    */
   async fetchWishlist({ q = '', sort = '', page = 1 }) {
-    return this.get<Wishlist>('/api/wishlists/me')
+    return this.get<PaginatedResponse<Wishlist>>('/api/wishlists/me')
   }
 
   /**
@@ -72,6 +72,18 @@ export class WishlistService extends BaseService {
     )
   }
 
+  /**
+   * Checks in bulk if products are in the user's wishlist
+   * @example
+   * // Example usage
+   * const res = await wishlistService.checkWishlistinBulk([{
+   *   productId: '123',
+   *   variantId: '456'
+   * }]);
+   */
+  async checkWishlistInBulk(ids: { productId: string, variantId: string }[]) {
+    return this.post<{ productId: string, variantId: string, exists: boolean }[]>('/api/wishlists/me/bulk-check', ids)
+  }
   /**
    * Toggles a product's presence in the user's wishlist
    * If the product is already in the wishlist, it will be removed
