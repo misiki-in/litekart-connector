@@ -1,6 +1,49 @@
 import { BaseService } from './base.service'
 
 /**
+ * Interface representing the store details returned by the API
+ */
+export interface StoreDetails {
+  id: string
+  name: string
+  domain: string
+  logo?: string
+  favicon?: string
+  description?: string
+  address?: {
+    street?: string
+    city?: string
+    state?: string
+    country?: string
+    zipCode?: string
+  }
+  contact?: {
+    email?: string
+    phone?: string
+    website?: string
+  }
+  settings?: {
+    currency?: string
+    timezone?: string
+    language?: string
+    [key: string]: unknown
+  }
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * Parameters for fetching store details
+ */
+export interface GetStoreParams {
+  /** The ID of the store to fetch */
+  storeId?: string
+  /** The domain name of the store to fetch */
+  domain?: string
+}
+
+/**
  * StoreService provides functionality for retrieving store information
  * in the Litekart platform.
  *
@@ -27,10 +70,8 @@ export class StoreService extends BaseService {
   /**
    * Retrieves store details by ID or domain name
    *
-   * @param {Object} params - The parameters for fetching the store
-   * @param {string} [params.storeId] - The ID of the store to fetch
-   * @param {string} [params.domain] - The domain name of the store to fetch
-   * @returns {Promise<any>} The store details
+   * @param {GetStoreParams} params - The parameters for fetching the store
+   * @returns {Promise<StoreDetails>} The store details
    * @api {get} /api/stores/public-details Get store details
    *
    * @example
@@ -47,15 +88,19 @@ export class StoreService extends BaseService {
   async getStoreByIdOrDomain({
     storeId,
     domain
-  }: {
-    storeId?: string
-    domain?: string
-  }) {
-    let url = `/api/stores/public-details?domain=${domain}`
-    if (storeId) {
-      url = `/api/stores/public-details?store_id=${storeId}`
+  }: GetStoreParams): Promise<StoreDetails> {
+    if (!storeId && !domain) {
+      throw new Error('Either storeId or domain must be provided')
     }
-    return this.get(url)
+
+    let url = '/api/stores/public-details?'
+    if (storeId) {
+      url += `store_id=${encodeURIComponent(storeId)}`
+    } else if (domain) {
+      url += `domain=${encodeURIComponent(domain)}`
+    }
+
+    return this.get<StoreDetails>(url)
   }
 }
 

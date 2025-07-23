@@ -1,5 +1,31 @@
-import type { Address, PaginatedResponse } from '../types'
+import type { Address } from '../types/address-types'
+import type { PaginatedResponse } from '../types/pagination-types'
 import { BaseService } from './base.service'
+
+/**
+ * Parameters for listing addresses with pagination and filtering
+ */
+interface ListAddressesParams {
+  /** The page number to fetch (1-based) */
+  page?: number
+  /** Search query string */
+  q?: string
+  /** Sort order (e.g., '-createdAt' for newest first) */
+  sort?: string
+  /** Filter by user ID */
+  user?: string
+}
+
+/**
+ * Parameters for creating a new address
+ */
+type CreateAddressParams = Omit<Address, 'id' | 'createdAt' | 'updatedAt' | 'active'>
+
+/**
+ * Parameters for updating an existing address
+ */
+type UpdateAddressParams = Partial<Omit<Address, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
+
 
 /**
  * AddressService provides functionality for managing user addresses
@@ -41,10 +67,35 @@ export class AddressService extends BaseService {
    * // Get the second page of addresses sorted by creation date
    * const addresses = await addressService.list({ page: 2, sort: '-createdAt' });
    */
-  async list({ page = 1, q = '', sort = '-createdAt', user = '' }) {
-    return this.get(
-      `/api/address?page=${page}&q=${q}&sort=${sort}&user=${user}`
-    ) as Promise<PaginatedResponse<Address>>
+
+
+  /**
+   * Fetches a paginated list of addresses with optional filtering
+   * 
+   * @param {ListAddressesParams} params - The parameters for filtering and pagination
+   * @returns {Promise<PaginatedResponse<Address>>} Paginated list of addresses
+   * @throws {Error} If the request fails
+   * 
+   * @example
+   * // Get the second page of addresses sorted by creation date
+   * const addresses = await addressService.list({ page: 2, sort: '-createdAt' });
+   */
+  async list(params: ListAddressesParams = {}): Promise<PaginatedResponse<Address>> {
+    const { 
+      page = 1, 
+      q = '', 
+      sort = '-createdAt', 
+      user = '' 
+    } = params
+    
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      q,
+      sort,
+      user
+    }).toString()
+    
+    return this.get<PaginatedResponse<Address>>(`/api/address?${queryParams}`)
   }
 
   /**
@@ -80,8 +131,29 @@ export class AddressService extends BaseService {
    *   country: 'US'
    * });
    */
-  async saveAddress(address: Omit<Address, 'id'>) {
-    return this.post('/api/address/me', address) as Promise<Address>
+  /**
+   * Creates a new address for the current user
+   * 
+   * @param {Omit<Address, 'id' | 'createdAt' | 'updatedAt'>} address - The address data to save
+   * @returns {Promise<Address>} The created address with ID and timestamps
+   * @throws {Error} If the request fails or address creation fails
+   * 
+   * @example
+   * // Create a new address
+   * const newAddress = await addressService.saveAddress({
+   *   firstName: 'John',
+   *   lastName: 'Doe',
+   *   address_1: '123 Main St',
+   *   city: 'Anytown',
+   *   state: 'CA',
+   *   zip: '12345',
+   *   country: 'US',
+   *   isPrimary: false,
+   *   isResidential: true
+   * });
+   */
+  async saveAddress(address: CreateAddressParams): Promise<Address> {
+    return this.post<Address>('/api/address/me', address)
   }
 
   /**
@@ -99,8 +171,23 @@ export class AddressService extends BaseService {
    *   zip: '54321'
    * });
    */
-  async editAddress(id: string, address: Partial<Address>) {
-    return this.put(`/api/address/me/${id}`, address) as Promise<Address>
+  /**
+   * Updates an existing address
+   * 
+   * @param {string} id - The ID of the address to update
+   * @param {Partial<Omit<Address, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>} address - The address fields to update
+   * @returns {Promise<Address>} The updated address
+   * @throws {Error} If the request fails or address update fails
+   * 
+   * @example
+   * // Update an address
+   * const updatedAddress = await addressService.editAddress('123', {
+   *   city: 'New City',
+   *   zip: '54321'
+   * });
+   */
+  async editAddress(id: string, address: UpdateAddressParams): Promise<Address> {
+    return this.put<Address>(`/api/address/me/${id}`, address)
   }
 
   /**
@@ -114,8 +201,19 @@ export class AddressService extends BaseService {
    * // Delete an address
    * await addressService.deleteAddress('123');
    */
-  async deleteAddress(id: string) {
-    return this.delete(`/api/address/${id}`)
+  /**
+   * Deletes an address
+   * 
+   * @param {string} id - The ID of the address to delete
+   * @returns {Promise<void>} Resolves when the address is successfully deleted
+   * @throws {Error} If the request fails or address deletion fails
+   * 
+   * @example
+   * // Delete an address
+   * await addressService.deleteAddress('123');
+   */
+  async deleteAddress(id: string): Promise<void> {
+    await this.delete<void>(`/api/address/${id}`)
   }
 }
 
