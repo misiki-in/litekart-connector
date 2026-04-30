@@ -76,6 +76,26 @@ export class CheckoutService extends BaseService {
   }
 
   /**
+   * Initiates Point of Sale checkout process
+   *
+   * @param {Object} params - Parameters for POS checkout
+   * @param {string} params.cartId - The cart ID for checkout
+   * @param {string} params.origin - The origin URL for callbacks
+   * @returns {Promise<Cart>} The cart with POS payment information
+   * @api {post} /api/checkout/pos POS checkout
+   *
+   * @example
+   * // Start POS checkout
+   * const checkoutData = await checkoutService.checkoutPOS({
+   *   cartId: '123',
+   *   origin: 'https://example.com'
+   * });
+   */
+  async checkoutPOS({ cartId, origin }: { cartId: string; origin: string }) {
+    return this.post('/api/checkout/pos', { cartId, origin }) as Promise<Cart>
+  }
+
+  /**
    * Captures a Razorpay payment after authorization
    *
    * @param {Object} params - Parameters for capturing Razorpay payment
