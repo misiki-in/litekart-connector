@@ -105,7 +105,7 @@ export class CategoryService extends BaseService {
  * const category = await categoryService.fetchAllProductsOfCategories('123');
  */
 
-  async fetchAllProductsOfCategories(id) {
+  async fetchAllProductsOfCategories(id: string) {
     return this.get(`/api/product-categories?handle=${id}`) as Promise<
       PaginatedResponse<Category>
     >

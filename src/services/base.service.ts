@@ -42,6 +42,8 @@ export class BaseService {
 
   private async safeFetch(url: URL | string, data?: any) {
     try {
+      //@todo: remove this
+      console.log("Making request to------------->", url)
       return await this._fetch(url, data)
     } catch(e: any) {
       if (navigator.onLine) {
@@ -52,6 +54,9 @@ export class BaseService {
   }
 
   private async handleError(response: Response) {
+    //@todo: remove this
+    console.log("Response error-------------->", response)
+
     if (response.headers.get("Content-Type") != "application/json")
       throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
 
