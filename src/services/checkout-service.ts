@@ -225,6 +225,58 @@ export class CheckoutService extends BaseService {
     })
   }
 
+  /**
+   * Initiates Cashfree checkout process
+   *
+   * @param {Object} params - Parameters for Cashfree checkout
+   * @param {string} params.cartId - The cart ID for checkout
+   * @param {string} params.email - Customer email address
+   * @param {string} params.origin - The frontend origin URL
+   * @returns {Promise<any>} The Cashfree session response containing payment_session_id, payment_link, etc.
+   * @api {post} /api/checkout/cashfree Cashfree checkout
+   *
+   * @example
+   * // Start Cashfree checkout
+   * const checkoutData = await checkoutService.checkoutCashfree({
+   *   cartId: 'cart_abc123',
+   *   email: 'customer@example.com',
+   *   origin: window.location.origin
+   * });
+   */
+  async checkoutCashfree({
+    cartId,
+    email,
+    origin
+  }: {
+    cartId: string
+    email: string
+    origin: string
+  }) {
+    return this.post('/api/checkout/cashfree', {
+      cartId,
+      email,
+      origin
+    })
+  }
+
+  /**
+   * Captures and verifies a Cashfree payment after redirection
+   *
+   * @param {Object} params - Parameters for capturing Cashfree payment
+   * @param {string} params.order_no - The order number received from the session creation/callback
+   * @returns {Promise<any>} The capture/verification response from the backend
+   * @api {post} /api/checkout/cashfree-capture Capture Cashfree payment
+   *
+   * @example
+   * // Capture Cashfree payment
+   * const captureResponse = await checkoutService.captureCashfreePayment({
+   *   order_no: 'parent_order_abc123'
+   * });
+   */
+  async captureCashfreePayment({ order_no }: { order_no: string }) {
+    return this.post('/api/checkout/cashfree-capture', { order_no })
+  }
+
   async createAffirmPayOrder({
     cartId,
     addressId,
