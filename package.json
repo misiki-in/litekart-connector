@@ -1,7 +1,7 @@
 {
   "name": "@misiki/litekart-connector",
   "version": "2.0.29",
-  "description": "API Connector for Litekart",
+  "description": "API Connector for Litekart with Svelte Commerce",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,7 +31,17 @@
     "p": "tsup && npm publish --access public",
     "dev": "tsup --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "litekart",
+    "connector",
+    "ecommerce",
+    "headless",
+    "storefront",
+    "api",
+    "integration",
+    "typescript",
+    "svelte"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
